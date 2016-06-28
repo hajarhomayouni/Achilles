@@ -1420,8 +1420,7 @@ select 103 as analysis_id,
 INTO #tempResults
 from ageStatsPrior p
 CROSS JOIN overallStats o
-GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
-;
+GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value LIMIT 10;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
 select analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
@@ -1482,8 +1481,7 @@ select 104 as analysis_id,
 INTO #tempResults
 from ageStatsPrior p
 join overallStats o on p.gender_concept_id = o.gender_concept_id
-GROUP BY o.gender_concept_id, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
-;
+GROUP BY o.gender_concept_id, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value LIMIT 10;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, stratum_1, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
 select analysis_id, stratum_1, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
@@ -1549,8 +1547,7 @@ select 105 as analysis_id,
 into #tempResults
 from priorStats p
 CROSS JOIN overallStats o
-GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
-;
+GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value LIMIT 10;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
 select analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
@@ -1615,8 +1612,7 @@ select 106 as analysis_id,
 INTO #tempResults
 from priorStats p
 join overallStats o on p.gender_concept_id = o.gender_concept_id
-GROUP BY o.gender_concept_id, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
-;
+GROUP BY o.gender_concept_id, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value LIMIT 10;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, stratum_1, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
 select analysis_id, gender_concept_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
@@ -1688,8 +1684,7 @@ select 107 as analysis_id,
 into #tempResults
 from priorStats p
 join overallStats o on p.age_decile = o.age_decile
-GROUP BY o.age_decile, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
-;
+GROUP BY o.age_decile, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value LIMIT 10;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, stratum_1, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
 select analysis_id, age_decile, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
