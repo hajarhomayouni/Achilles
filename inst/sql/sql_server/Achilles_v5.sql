@@ -2096,8 +2096,8 @@ group by vo1.visit_concept_id,
 
 with rawData(stratum1_id, stratum2_id, count_value) as
 (
-  select vo1.visit_concept_id,
-  	p1.gender_concept_id,
+  select vo1.visit_concept_id as stratum1_id,
+  	p1.gender_concept_id as stratum2_id,
 		vo1.visit_start_year - p1.year_of_birth as count_value
 	from @cdm_database_schema.PERSON p1
 	inner join 
