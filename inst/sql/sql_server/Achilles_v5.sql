@@ -2221,7 +2221,7 @@ where vo1.care_site_id is not null
 -- 211	Distribution of length of stay by visit_concept_id
 with rawData(stratum_id, count_value) as
 (
-  select visit_concept_id, datediff(dd,visit_start_date,visit_end_date) as count_value
+  select visit_concept_id as stratum_id, datediff(dd,visit_start_date,visit_end_date) as count_value
   from @cdm_database_schema.visit_occurrence
 ),
 overallStats (stratum_id, avg_value, stdev_value, min_value, max_value, total) as
@@ -2397,7 +2397,7 @@ group by co1.condition_concept_id,
 -- 403	Number of distinct condition occurrence concepts per person
 with rawData(person_id, count_value) as
 (
-  select person_id, COUNT_BIG(distinct condition_concept_id) as num_conditions
+  select person_id, COUNT_BIG(distinct condition_concept_id) as count_value
   from @cdm_database_schema.condition_occurrence
 	group by person_id
 ),
@@ -2733,7 +2733,7 @@ group by death_type_concept_id
 
 with rawData(stratum_id, count_value) as
 (
-  select p1.gender_concept_id,
+  select p1.gender_concept_id as stratum_id,
     d1.death_year - p1.year_of_birth as count_value
   from @cdm_database_schema.PERSON p1
   inner join
@@ -3726,7 +3726,7 @@ where de1.visit_occurrence_id is not null
 -- 715	Distribution of days_supply by drug_concept_id
 with rawData(stratum_id, count_value) as
 (
-  select drug_concept_id,
+  select drug_concept_id as stratum_id,
 		days_supply as count_value
 	from @cdm_database_schema.drug_exposure 
 	where days_supply is not null
@@ -3788,7 +3788,7 @@ drop table #tempResults;
 -- 716	Distribution of refills by drug_concept_id
 with rawData(stratum_id, count_value) as
 (
-  select drug_concept_id,
+  select drug_concept_id as stratum_id,
     refills as count_value
 	from @cdm_database_schema.drug_exposure 
 	where refills is not null
@@ -3851,7 +3851,7 @@ drop table #tempResults;
 -- 717	Distribution of quantity by drug_concept_id
 with rawData(stratum_id, count_value) as
 (
-  select drug_concept_id,
+  select drug_concept_id as stratum_id,
     quantity as count_value
   from @cdm_database_schema.drug_exposure 
 	where quantity is not null
@@ -4565,7 +4565,7 @@ drop table #tempResults;
 -- 907	Distribution of drug era length, by drug_concept_id
 with rawData(stratum1_id, count_value) as
 (
-  select drug_concept_id,
+  select drug_concept_id as stratum1_id,
     datediff(dd,drug_era_start_date, drug_era_end_date) as count_value
   from  @cdm_database_schema.drug_era de1
 ),
