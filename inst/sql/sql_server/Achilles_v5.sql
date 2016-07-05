@@ -1379,7 +1379,7 @@ group by p1.gender_concept_id, year(op1.index_date) - p1.YEAR_OF_BIRTH;
 with rawData (person_id, age_value) as
 (
 select p.person_id, 
-  MIN(YEAR(observation_period_start_date)) - p.YEAR_OF_BIRTH as age_value
+  (MIN(YEAR(observation_period_start_date)) - p.YEAR_OF_BIRTH) as age_value
   from @cdm_database_schema.PERSON p
   JOIN @cdm_database_schema.OBSERVATION_PERIOD op on p.person_id = op.person_id
   group by p.person_id, p.year_of_birth
