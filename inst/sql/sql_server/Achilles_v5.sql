@@ -527,9 +527,9 @@ create table @results_database_schema.ACHILLES_results_dist
 
 
 
-CREATE INDEX idx_analysis_id ON ACHILLES_analysis (analysis_id);
-CREATE INDEX idx_analysis_id ON ACHILLES_results (analysis_id);
-CREATE INDEX idx_analysis_id ON ACHILLES_results_dist (analysis_id);
+CREATE INDEX idx_analysis_id ON @results_database_schema.ACHILLES_analysis (analysis_id);
+CREATE INDEX idx_analysis_id ON @results_database_schema.ACHILLES_results (analysis_id);
+CREATE INDEX idx_analysis_id ON @results_database_schema.ACHILLES_results_dist (analysis_id);
 --end of creating tables
 
 
