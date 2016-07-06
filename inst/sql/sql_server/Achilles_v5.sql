@@ -480,8 +480,7 @@ create table @results_database_schema.ACHILLES_analysis
 	stratum_2_name varchar(255),
 	stratum_3_name varchar(255),
 	stratum_4_name varchar(255),
-	stratum_5_name varchar(255),
-	PRIMARY KEY (analysis_id)
+	stratum_5_name varchar(255)
 );
 
 
@@ -496,8 +495,7 @@ create table @results_database_schema.ACHILLES_results
 	stratum_3 varchar(255),
 	stratum_4 varchar(255),
 	stratum_5 varchar(255),
-	count_value bigint,
-	PRIMARY KEY (analysis_id)
+	count_value bigint
 );
 
 
@@ -521,8 +519,7 @@ create table @results_database_schema.ACHILLES_results_dist
 	p10_value float,
 	p25_value float,
 	p75_value float,
-	p90_value float,
-	PRIMARY KEY (analysis_id)
+	p90_value float
 );
 
 
