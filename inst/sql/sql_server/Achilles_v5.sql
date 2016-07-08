@@ -2519,9 +2519,9 @@ INTO #overallStats
  FROM #rawData_406
 group by subject_id, gender_concept_id
 ;
-
+--stats cannot be a temprory table in mysql
 select subject_id as stratum1_id, gender_concept_id as stratum2_id, count_value, count_big(*) as total, row_number() over (partition by subject_id, gender_concept_id order by count_value) as rn
-INTO #stats
+INTO stats
 FROM #rawData_406
 group by subject_id, gender_concept_id, count_value
 ;
@@ -2533,10 +2533,12 @@ Create index idx_rn on stats (rn);
 
 select s.stratum1_id, s.stratum2_id, s.count_value, s.total, sum(p.total) as accumulated
 INTO #priorStats
-from #stats s
-join #stats p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id and p.rn <= s.rn
+from stats s
+join stats p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id and p.rn <= s.rn
 group by s.stratum1_id, s.stratum2_id, s.count_value, s.total, s.rn
 ;
+
+Drop table stats;
 --</hajar>
 select 406 as analysis_id,
   o.stratum1_id,
