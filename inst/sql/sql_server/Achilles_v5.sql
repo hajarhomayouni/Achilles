@@ -2538,7 +2538,6 @@ join stats p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id 
 group by s.stratum1_id, s.stratum2_id, s.count_value, s.total, s.rn
 ;
 
-Drop table stats;
 --</hajar>
 select 406 as analysis_id,
   o.stratum1_id,
@@ -2569,6 +2568,10 @@ drop table #tempResults;
 
 truncate Table #rawData_406;
 drop table #rawData_406;
+
+--<hajar>
+Drop table stats,#overallStats,#priorStats;
+--</hajar>
 
 --}
 
