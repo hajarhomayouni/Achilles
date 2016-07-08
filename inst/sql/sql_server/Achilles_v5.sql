@@ -1225,7 +1225,7 @@ insert into @results_database_schema.ACHILLES_analysis (analysis_id, analysis_na
 --end of importing values into analysis lookup table
 
 --} : {else if not createTable
-delete from @results_database_schema.ACHILLES_results where analysis_id IN (@list_of_analysis_ids);
+delete from @results_database_schema.	ACHILLES_results where analysis_id IN (@list_of_analysis_ids);
 delete from @results_database_schema.ACHILLES_results_dist where analysis_id IN (@list_of_analysis_ids);
 }
 
@@ -2507,32 +2507,37 @@ inner join
 	group by person_id, condition_concept_id
 ) co1 on p1.person_id = co1.person_id
 ;
-
-with overallStats (stratum1_id, stratum2_id, avg_value, stdev_value, min_value, max_value, total) as
-(
-  select subject_id as stratum1_id,
+--<hajar> splitted this query to add index
+select subject_id as stratum1_id,
     gender_concept_id as stratum2_id,
     avg(1.0 * count_value) as avg_value,
     stdev(count_value) as stdev_value,
     min(count_value) as min_value,
     max(count_value) as max_value,
     count_big(*) as total
-  FROM #rawData_406
-	group by subject_id, gender_concept_id
-),
-stats (stratum1_id, stratum2_id, count_value, total, rn) as
-(
-  select subject_id as stratum1_id, gender_concept_id as stratum2_id, count_value, count_big(*) as total, row_number() over (partition by subject_id, gender_concept_id order by count_value) as rn
-  FROM #rawData_406
-  group by subject_id, gender_concept_id, count_value
-),
-priorStats (stratum1_id, stratum2_id, count_value, total, accumulated) as
-(
-  select s.stratum1_id, s.stratum2_id, s.count_value, s.total, sum(p.total) as accumulated
-  from stats s
-  join stats p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id and p.rn <= s.rn
-  group by s.stratum1_id, s.stratum2_id, s.count_value, s.total, s.rn
-)
+INTO #overallStats
+ FROM #rawData_406
+group by subject_id, gender_concept_id
+;
+
+select subject_id as stratum1_id, gender_concept_id as stratum2_id, count_value, count_big(*) as total, row_number() over (partition by subject_id, gender_concept_id order by count_value) as rn
+INTO #stats
+FROM #rawData_406
+group by subject_id, gender_concept_id, count_value
+;
+
+-- ADD index to stats that increases mysql performance considerably
+Create index idx_stratum1_id on stats (stratum1_id);
+Create index idx_stratum2_id on stats (stratum2_id);
+Create index idx_rn on stats (rn);
+
+select s.stratum1_id, s.stratum2_id, s.count_value, s.total, sum(p.total) as accumulated
+INTO #priorStats
+from #stats s
+join #stats p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id and p.rn <= s.rn
+group by s.stratum1_id, s.stratum2_id, s.count_value, s.total, s.rn
+;
+--</hajar>
 select 406 as analysis_id,
   o.stratum1_id,
   o.stratum2_id,
@@ -2547,8 +2552,8 @@ select 406 as analysis_id,
 	MIN(case when p.accumulated >= .75 * o.total then count_value else o.max_value end) as p75_value,
 	MIN(case when p.accumulated >= .90 * o.total then count_value else o.max_value end) as p90_value
 INTO #tempResults
-from priorStats p
-join overallStats o on p.stratum1_id = o.stratum1_id and p.stratum2_id = o.stratum2_id 
+from #priorStats p
+join #overallStats o on p.stratum1_id = o.stratum1_id and p.stratum2_id = o.stratum2_id 
 GROUP BY o.stratum1_id, o.stratum2_id, o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
 ;
 
