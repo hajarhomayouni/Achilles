@@ -3196,7 +3196,7 @@ group by po1.procedure_concept_id,
 -- 603	Number of distinct procedure occurrence concepts per person
 with rawData(count_value) as
 (
-  select COUNT_BIG(distinct po.procedure_concept_id) as num_procedures
+  select COUNT_BIG(distinct po.procedure_concept_id) as count_value
 	from @cdm_database_schema.procedure_occurrence po
 	group by po.person_id
 ),
