@@ -3242,7 +3242,7 @@ GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
 ;
 
 insert into @results_database_schema.ACHILLES_results_dist (analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value)
-select analysis_id, count_value, min_value, max_value, avg_value, stdev_value, median_value, p10_value, p25_value, p75_value, p90_value
+select analysis_id, count_value, min_value+0, max_value+0, avg_value+0, stdev_value+0, median_value+0, p10_value, p25_value, p75_value, p90_value
 from #tempResults
 ;
 
